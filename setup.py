@@ -41,8 +41,8 @@ name = 'ngosolaris'
 package = 'ngosolaris'
 description = 'assistance informatique a l entraide a humaine'
 url = 'https://github.com/numengo/python-ngosolaris'
-author='Cedric R, 64 CB Nord',
-author_email='solaris64cotebasquenord@protonmail.com',
+author = 'Cedric R, 64 CB Nord'
+author_email = 'solaris64cotebasquenord@protonmail.com'
 license = 'GNU General Public License v3'
 version = get_version(package)
 
@@ -71,7 +71,7 @@ install_requires = [
     'python-gettext',
     'click',
     'reportlab',
-    'pdfrw', 
+    'pdfrw',
 ]
 
 post_install_requires = [i for i in install_requires if ('-' in i or ':' in i or '.' in i)]
