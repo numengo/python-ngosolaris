@@ -9,15 +9,16 @@ from ngosolaris.cli import cli
 # PROTECTED REGION ID(ngosolaris.tests.test_ngosolaris) ENABLED START
 
 def test_ngosolaris():
-    # from ngosolaris import ngosolaris
-    # assert ngosolaris
-
-
-    runner = CliRunner()
-    result = runner.invoke(main, [])
-
-    assert result.output == 'Hello World!\n'
-    assert result.exit_code == 0
+    from ngosolaris import Cell, AddressBook
+    # assert solaris
+    cell = Cell(
+        cell_id='Cote Basque Nord 64',
+        cell_dir='/Users/cedric/Devel/admin/SOLARIS/annuaire/cote_basque_nord',
+    )
+    #cell.load_members()
+    addr_book = AddressBook(cell)
+    addr_book.write_member_updated_forms()
+    addr_book.write_edition()
 
 
 if __name__ == '__main__':
