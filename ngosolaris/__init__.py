@@ -7,7 +7,7 @@ __email__ = 'solaris64cotebasquenord@protonmail.com'
 __version__ = '1.0.3'
 
 from simple_settings import LazySettings
-settings = LazySettings('ngosolaris.config.settings', 'NGOSOLARIS_.environ')
+settings = LazySettings('ngosolaris.config.settings')
 
 # PROTECTED REGION ID(ngosolaris.init) ENABLED START
 from ngoschema.loaders import register_module

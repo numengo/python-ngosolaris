@@ -41,8 +41,8 @@ name = 'ngosolaris'
 package = 'ngosolaris'
 description = 'assistance informatique a l entraide a humaine'
 url = 'https://github.com/numengo/python-ngosolaris'
-author = 'Cedric R, 64 CB Nord'
-author_email = 'solaris64cotebasquenord@protonmail.com'
+author = 'Cedric ROMAN'
+author_email = 'roman@numengo.com'
 license = 'GNU General Public License v3'
 version = get_version(package)
 
@@ -72,23 +72,43 @@ install_requires = [
     'click',
     'reportlab',
     'pdfrw',
-    'ngoschema',
+    'ngoschema>=1.0.1',
 ]
 
-post_install_requires = [i for i in install_requires if ('-' in i or ':' in i or '.' in i)]
+pre_install_requires = []
+
+pre_install_requires += [i for i in install_requires if ('-' in i or ':' in i or '.' in i)]
 install_requires = [i for i in install_requires if not ('-' in i or ':' in i or '.' in i)]
+post_install_requires = []
 
 
 # for setuptools to work properly, we need to install packages with - or : separately
 # and for that we need a hook
 # https://stackoverflow.com/questions/20288711/post-install-script-with-python-setuptools
-class PostInstallCommand(install):
-    """Post-installation for installation mode."""
+
+class CustomDevelopCommand(develop):
+    """Custom installation for development mode."""
     def run(self):
+        # PUT YOUR CUSTOM INSTALL SCRIPT HERE or CALL A FUNCTION
+        if pre_install_requires:
+            cmd = ['pip', 'install', '-q'] + pre_install_requires
+            subprocess.check_call(cmd)
+        develop.run(self)
         if post_install_requires:
             cmd = ['pip', 'install', '-q'] + post_install_requires
             subprocess.check_call(cmd)
+
+class CustomInstallCommand(install):
+    """Custom installation for installation mode."""
+    def run(self):
+        # PUT YOUR CUSTOM INSTALL SCRIPT HERE or CALL A FUNCTION
+        if post_install_requires:
+            cmd = ['pip', 'install', '-q'] + pre_install_requires
+            subprocess.check_call(cmd)
         install.run(self)
+        if post_install_requires:
+            cmd = ['pip', 'install', '-q'] + post_install_requires
+            subprocess.check_call(cmd)
 
 test_requires = [
     'pytest',
@@ -148,7 +168,7 @@ setup(
         'Topic :: Utilities',
     ],
     cmdclass={
-        'install': PostInstallCommand,
-        #'develop': PostInstallCommand,
+        'install': CustomInstallCommand,
+        'develop': CustomDevelopCommand,
     },
 )

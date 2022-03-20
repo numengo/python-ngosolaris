@@ -5,7 +5,7 @@ Credits
 Development Lead
 ----------------
 
-* Cedric R, 64 CB Nord - solaris-france.org
+* Cedric ROMAN - roman@numengo.com
 
 Contributors
 ------------
