@@ -40,7 +40,7 @@ def get_version(package):
 
 name = 'ngosolaris'
 package = 'ngosolaris'
-description = 'assistance informatique a l entraide a humaine'
+description = 'assistance informatique a l entraide humaine'
 url = 'https://github.com/numengo/python-ngosolaris'
 author = 'Cedric ROMAN'
 author_email = 'roman@numengo.com'

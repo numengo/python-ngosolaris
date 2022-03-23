@@ -29,7 +29,7 @@ from .personas import Member, Administrator, Coordinator
 class Cell(with_metaclass(SchemaMetaclass)):
     _id = r"https://solaris-france.org#/$defs/Cell"
 
-    def __init__(self, cell_id, cell_dir):
+    def __init__(self, cell_id, cell_dir, **kwargs):
         ObjectProtocol.__init__(self)
         self.cell_id = cell_id
         self.cell_dir = cell_dir if isinstance(cell_dir, Path) else Path(cell_dir)
@@ -85,6 +85,7 @@ class Cell(with_metaclass(SchemaMetaclass)):
             m['PageField'] = ip = str(i + 1)
 
     def load_members(self, member_dir=None):
+        """load members data from a directory containing forms."""
         member_dir = member_dir or self.member_dir
         self.members += self._read_members(member_dir)
         self._sort_members()

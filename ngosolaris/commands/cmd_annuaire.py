@@ -40,3 +40,14 @@ def update(ctx):
     for f in forms:
         click.echo('WRITE FILE %s' % f)
     #### PROTECTED REGION END
+
+@cli.command('formulaire')
+@pass_environment
+def formulaire(ctx):
+    __doc__ = AddressBook.write_form.__doc__
+    #### PROTECTED REGION ID(solaris.commands.cmd_annuaire.formulaire) ENABLED START
+    click.echo('CALL write_form')
+    addr_book = ctx.obj
+    fp = addr_book.write_form()
+    click.echo('WRITE FILE %s' % fp)
+    #### PROTECTED REGION END

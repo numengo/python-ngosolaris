@@ -63,6 +63,14 @@ class AddressBook(with_metaclass(SchemaMetaclass)):
             os.makedirs(str(forms_updated_dir))
             self._logger.info('CREATE DIRECTORY %s.' % build_ed_dir)
 
+    def write_form(self):
+        """create a local copy of the form"""
+        import shutil
+        form_fp1 = Path(FORM_PAGE)
+        form_fp2 = self.cell.cell_dir.joinpath(form_fp1.name)
+        self._logger.info('CREATE FILE %s.' % form_fp2)
+        return form_fp2
+
     def _write_member_pages(self):
         cell_id = self.cell.cell_id
         for member in self.cell.members:
@@ -300,12 +308,14 @@ class AddressBook(with_metaclass(SchemaMetaclass)):
         return self
 
     def write_edition(self):
+        """compile the address book, timestamped and indexed."""
         self._write_member_pages()
         self._write_index()
         self._compile_write()
         return self
 
     def write_member_updated_forms(self):
+        """update all existing member forms"""
         cell_id = self.cell.cell_id
         forms = []
         for member in self.cell.members:
@@ -347,4 +357,3 @@ class AddressBook(with_metaclass(SchemaMetaclass)):
             member_writer.write()
             self._logger.info('CREATE FILE %s.' % mfp)
         return forms
-
