@@ -4,7 +4,7 @@
 
 __author__ = """Cedric R, 64 CB Nord"""
 __email__ = 'solaris64cotebasquenord@protonmail.com'
-__version__ = '1.0.8'
+__version__ = '1.0.9'
 
 from simple_settings import LazySettings
 settings = LazySettings('ngosolaris.config.settings')
