@@ -59,9 +59,6 @@ class AddressBook(with_metaclass(SchemaMetaclass)):
         if not build_ed_dir.exists():
             os.makedirs(str(build_ed_dir))
             self._logger.info('CREATE DIRECTORY %s.' % build_ed_dir)
-        if not forms_updated_dir.exists():
-            os.makedirs(str(forms_updated_dir))
-            self._logger.info('CREATE DIRECTORY %s.' % build_ed_dir)
 
     def write_form(self):
         """create a local copy of the form"""
@@ -72,10 +69,14 @@ class AddressBook(with_metaclass(SchemaMetaclass)):
         return form_fp2
 
     def _write_member_pages(self):
+        pages_dir = self.build_ed_dir.joinpath('pages')
+        if not pages_dir.exists():
+            os.makedirs(str(pages_dir))
+            self._logger.info('CREATE DIRECTORY %s.' % pages_dir)
         cell_id = self.cell.cell_id
         for member in self.cell.members:
             member_page = pdfrw.PdfReader(ADDR_BOOK_PAGE)
-            mfp = self.build_ed_dir.joinpath(member['PageFilename']+'.pdf')
+            mfp = pages_dir.joinpath(member['PageFilename'])
             member['PageFilepath'] = mfp
             member['EditionFilenameField'] = self.edition_fp.stem
             member_writer = pdfrw.PdfWriter(str(mfp))
@@ -316,11 +317,15 @@ class AddressBook(with_metaclass(SchemaMetaclass)):
 
     def write_member_updated_forms(self):
         """update all existing member forms"""
+        forms_dir = self.forms_updated_dir
+        if not forms_dir.exists():
+            os.makedirs(str(forms_dir))
+            self._logger.info('CREATE DIRECTORY %s.' % forms_dir)
         cell_id = self.cell.cell_id
         forms = []
         for member in self.cell.members:
             member_page = pdfrw.PdfReader(FORM_PAGE)
-            mfp = self.forms_updated_dir.joinpath(member['PageFilename']+'.pdf')
+            mfp = self.forms_updated_dir.joinpath(member['PageFilename'])
             forms.append(mfp)
             member['FormUpdatedFilepath'] = mfp
             member['EditionFilenameField'] = self.edition_fp.stem
@@ -330,11 +335,10 @@ class AddressBook(with_metaclass(SchemaMetaclass)):
                 if annotation[SUBTYPE_KEY] == WIDGET_SUBTYPE_KEY:
                     if annotation[ANNOT_FIELD_KEY]:
                         key = annotation[ANNOT_FIELD_KEY][1:-1]
-                        new_key = key + member['PageField']
                         if key in member.keys():
                             if type(member[key]) == bool:
                                 if member[key] == True:
-                                    annotation.update(pdfrw.PdfDict(AS=pdfrw.PdfName('Yes'), T=new_key))
+                                    annotation.update(pdfrw.PdfDict(AS=pdfrw.PdfName('Yes'), T=key))
                             else:
                                 val = member[key]
                                 val = pdfrw.PdfString.from_unicode(val)
@@ -343,7 +347,7 @@ class AddressBook(with_metaclass(SchemaMetaclass)):
                                         link_key = key.replace('Field', 'Link')
                                         #annotation.AA.D.URI = pdfrw.PdfString.from_unicode(link)
                                         #annotation.AA.D.update(pdfrw.PdfDict(V=val))
-                                annotation.update(pdfrw.PdfDict(V=val, T=new_key, AP=''))
+                                annotation.update(pdfrw.PdfDict(V=val, T=key, AP=''))
             member_page.Root.AcroForm.update(pdfrw.PdfDict(NeedAppearances=pdfrw.PdfObject('true')))
             member_writer.addpages(member_page.pages)
             member_writer.trailer.Info = pdfrw.IndirectPdfDict(

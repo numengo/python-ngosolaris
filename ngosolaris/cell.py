@@ -55,20 +55,27 @@ class Cell(with_metaclass(SchemaMetaclass)):
                     gender += 'F' if member['FemaleCheck'] else ''
                     # read fields, set gender, compute age and set title
                     member['GenderField'] = gender
+                elif 'M' in member['GenderField']:
+                    member['MaleCheck'] = True
+                elif 'F' in member['GenderField']:
+                    member['FemaleCheck'] = True
                 firstn = member['FirstNameField']
                 lastn = member.get('NameField') or member.get('LastNameField')
                 member['LastNameField'] = lastn
                 lastn_upper = lastn.upper()
                 city = member['CityField']
                 city_upper = member['CityUpper'] = city.upper()
-                byear = int(member['BirthYearField'].replace('.', '/').split('/')[-1])
-                if byear < 100:
-                    byear += 1900
-                member['BirthYearField'] = str(byear)
-                age = cyear - byear
-                member['TitleField'] = f'{firstn} {lastn_upper}, {city_upper}, {gender} {age}ans'
-                member['IndexEntryField'] = f'{lastn_upper} {firstn}, {city_upper}, {gender} {age}ans'
-                member['IndexCityEntryField'] = f'{lastn_upper} {firstn}, {gender} {age}ans'
+                age_suffix = ''
+                if member.get('BirthYearField'):
+                    byear = int(member['BirthYearField'].replace('.', '/').split('/')[-1])
+                    if byear < 100:
+                        byear += 1900
+                    member['BirthYearField'] = str(byear)
+                    age = cyear - byear
+                    age_suffix = f'{age}ans'
+                member['TitleField'] = f'{firstn} {lastn_upper}, {city_upper}, {gender} {age_suffix}'
+                member['IndexEntryField'] = f'{lastn_upper} {firstn}, {city_upper}, {gender} {age_suffix}'
+                member['IndexCityEntryField'] = f'{lastn_upper} {firstn}, {gender} {age_suffix}'
                 member['PageFilename'] = f'{city_upper} - {lastn_upper} {firstn}.pdf'
                 member['FormOrigFilepath'] = pdf_fp
                 member['EmailLink'] = f'mailto:{member["EmailField"]}'

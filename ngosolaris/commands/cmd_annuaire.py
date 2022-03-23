@@ -15,7 +15,6 @@ def cli(ctx, cell_id, cell_dir):
     #### PROTECTED REGION ID(solaris.commands.cmd_annuaire.cli) ENABLED START
     cell = Cell(cell_id=cell_id, cell_dir=cell_dir)
     ctx.obj = AddressBook(cell)
-    click.echo(str(ctx.obj))
     #### PROTECTED REGION END
 
 @cli.command('compile')
