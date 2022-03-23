@@ -40,9 +40,9 @@ Overview
     :alt: PyPI Package latest release
     :target: https://pypi.python.org/pypi/ngosolaris
 
-.. |commits-since| image:: https://img.shields.io/github/commits-since/numengo/python-ngosolaris/v1.0.6.svg
+.. |commits-since| image:: https://img.shields.io/github/commits-since/numengo/python-ngosolaris/v1.0.7.svg
     :alt: Commits since latest release
-    :target: https://github.com/numengo/python-ngosolaris/compare/v1.0.6...master
+    :target: https://github.com/numengo/python-ngosolaris/compare/v1.0.7...master
 
 .. |wheel| image:: https://img.shields.io/pypi/wheel/ngosolaris.svg
     :alt: PyPI Wheel
