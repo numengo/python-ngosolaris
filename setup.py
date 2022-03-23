@@ -73,41 +73,8 @@ install_requires = [
     'click',
     'reportlab',
     'pdfrw',
-    'ngoschema',
+    'ngoschema>=1.0.3',
 ]
-
-pre_install_requires = [i for i in install_requires if '=' not in i and ('-' in i or ':' in i or '.' in i)]
-install_requires = [i for i in install_requires if '=' in i or not ('-' in i or ':' in i or '.' in i)]
-post_install_requires = []
-
-
-# for setuptools to work properly, we need to install packages with - or : separately
-# and for that we need a hook
-# https://stackoverflow.com/questions/20288711/post-install-script-with-python-setuptools
-
-class CustomDevelopCommand(develop):
-    """Custom installation for development mode."""
-    def run(self):
-        # PUT YOUR CUSTOM INSTALL SCRIPT HERE or CALL A FUNCTION
-        if pre_install_requires:
-            cmd = ['pip', 'install', '-q'] + pre_install_requires
-            subprocess.check_call(cmd)
-        develop.run(self)
-        if post_install_requires:
-            cmd = ['pip', 'install', '-q'] + post_install_requires
-            subprocess.check_call(cmd)
-
-class CustomInstallCommand(install):
-    """Custom installation for installation mode."""
-    def run(self):
-        # PUT YOUR CUSTOM INSTALL SCRIPT HERE or CALL A FUNCTION
-        if post_install_requires:
-            cmd = ['pip', 'install', '-q'] + pre_install_requires
-            subprocess.check_call(cmd)
-        install.run(self)
-        if post_install_requires:
-            cmd = ['pip', 'install', '-q'] + post_install_requires
-            subprocess.check_call(cmd)
 
 test_requires = [
     'pytest',
@@ -165,8 +132,4 @@ setup(
         'Programming Language :: Python :: Implementation :: PyPy',
         'Topic :: Utilities',
     ],
-    cmdclass={
-        'install': CustomInstallCommand,
-        'develop': CustomDevelopCommand,
-    },
 )
