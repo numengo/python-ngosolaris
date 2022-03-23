@@ -37,21 +37,24 @@ class Cell(with_metaclass(SchemaMetaclass)):
         self.member_dir = self.cell_dir.joinpath(settings.MEMBER_DIR)
         self.members = []
         self.build_dir = self.cell_dir.joinpath(settings.BUILD_DIR)
+        # load members
         self.load_members()
 
-    def _read_members(self):
+    def _read_members(self, member_dir):
+        members = []
         cyear = date.today().year
-        for x in os.listdir(str(self.member_dir)):
+        for x in os.listdir(str(member_dir)):
             if x.endswith(".pdf"):
                 self._logger.info('LOAD FILE %s.' % x)
-                pdf_fp = self.member_dir.joinpath(x)
+                pdf_fp = member_dir.joinpath(x)
                 pdfr = pdfrw.PdfReader(str(pdf_fp))
-                # establish gender
                 member = get_form_fields(pdfr.pages[0])
-                gender = 'M' if member['MaleCheck'] else ''
-                gender += 'F' if member['FemaleCheck'] else ''
-                # read fields, set gender, compute age and set title
-                member['GenderField'] = gender
+                if not member.get('GenderField'):
+                    # establish gender
+                    gender = 'M' if member['MaleCheck'] else ''
+                    gender += 'F' if member['FemaleCheck'] else ''
+                    # read fields, set gender, compute age and set title
+                    member['GenderField'] = gender
                 firstn = member['FirstNameField']
                 lastn = member.get('NameField') or member.get('LastNameField')
                 member['LastNameField'] = lastn
@@ -70,7 +73,8 @@ class Cell(with_metaclass(SchemaMetaclass)):
                 member['FormOrigFilepath'] = pdf_fp
                 member['EmailLink'] = f'mailto:{member["EmailField"]}'
                 member['TelegramIdLink'] = f'https://t.me/{member["TelegramIdField"]}'
-                self.members.append(member)
+                members.append(member)
+        return members
 
     def _sort_members(self):
         self.members = members = sorted(self.members, key=lambda x: x['IndexEntryField'])
@@ -80,7 +84,8 @@ class Cell(with_metaclass(SchemaMetaclass)):
             self.members_city[m['CityField']].append(m)
             m['PageField'] = ip = str(i + 1)
 
-    def load_members(self):
-        self._read_members()
+    def load_members(self, member_dir=None):
+        member_dir = member_dir or self.member_dir
+        self.members += self._read_members(member_dir)
         self._sort_members()
         return self
