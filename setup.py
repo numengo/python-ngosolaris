@@ -69,11 +69,10 @@ setup_requires = [
 
 install_requires = [
     'future',
-    'python-gettext',
     'click',
+    'ngoschema>=1.0.3',
     'reportlab',
     'pdfrw',
-    'ngoschema>=1.0.3',
 ]
 
 test_requires = [
@@ -99,14 +98,13 @@ setup(
     author=author,
     author_email=author_email,
     url=url,
-    packages=[package],
+    packages=find_packages(exclude='tests'),
     package_data=get_package_data(package),
     include_package_data=True,
     zip_safe=False,
     keywords=["solaris", " contact book", " annuaire", " telegram"],
     setup_requires=setup_requires,
     install_requires=install_requires,
-    requires=install_requires,
     tests_require=test_requires,
     extras_require=extras_requires,
     entry_points={
